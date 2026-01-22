@@ -106,6 +106,20 @@ const formatCurrency = (value) => {
 };
 
 const formatNumber = (value) => getNumberFormatter().format(value);
+};
+
+const rates = {
+  laborPerHour: 20,
+  machinePerHour: 0.13,
+  powerPerHour: 0.03,
+};
+
+const formatter = new Intl.NumberFormat('de-CH', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+const formatCurrency = (value) => `${formatter.format(value)} CHF`;
 
 const readNumber = (input) => {
   const value = Number.parseFloat(input.value);
@@ -118,6 +132,8 @@ const updatePrices = (totalCost, vatRate, marginPercent, outputs) => {
   const gross = net * (1 + vatRate / 100);
   outputs.net.textContent = formatCurrency(net);
   outputs.gross.textContent = `${formatCurrency(gross)} inkl. MwSt`;
+  outputs.net.textContent = formatter.format(net);
+  outputs.gross.textContent = `${formatter.format(gross)} CHF inkl. MwSt`;
 };
 
 const update = () => {
@@ -158,6 +174,17 @@ const update = () => {
   const totalCost = materialCost + laborCost + machineCost + powerCost + hardwareCost + packagingCost;
 
   elements.totalWeight.textContent = formatNumber(totalWeight);
+
+  const totalWeight = weightG;
+  const materialCost = (weightG / 1000) * costPerKg;
+  const printTimeHours = printHours + printMinutes / 60;
+  const laborHours = laborMinutes / 60;
+  const laborCost = laborHours * rates.laborPerHour;
+  const machineCost = printTimeHours * rates.machinePerHour;
+  const powerCost = printTimeHours * rates.powerPerHour;
+  const totalCost = materialCost + laborCost + machineCost + powerCost + hardwareCost + packagingCost;
+
+  elements.totalWeight.textContent = formatter.format(totalWeight);
   elements.materialCost.textContent = formatCurrency(materialCost);
   elements.laborCost.textContent = formatCurrency(laborCost);
   elements.machineCost.textContent = formatCurrency(machineCost);
@@ -213,6 +240,9 @@ const update = () => {
   elements.priceCustom.textContent = formatCurrency(net);
   elements.priceCustomVat.textContent = `${formatCurrency(gross)} inkl. MwSt`;
   elements.selectedPrice.textContent = `Ausgewählt: ${formatCurrency(gross)} inkl. MwSt`;
+  elements.priceCustom.textContent = formatter.format(net);
+  elements.priceCustomVat.textContent = `${formatter.format(gross)} CHF inkl. MwSt`;
+  elements.selectedPrice.textContent = `Ausgewählt: ${formatter.format(gross)} CHF inkl. MwSt`;
 
   const sliderPercent = (marginPercent - Number(elements.marginSlider.min)) /
     (Number(elements.marginSlider.max) - Number(elements.marginSlider.min));
@@ -295,3 +325,4 @@ elements.advancedSettings.querySelector('summary').addEventListener('click', (ev
 document.body.dataset.theme = state.theme;
 elements.themeToggle.textContent = state.theme === 'dark' ? '🌙' : '☀️';
 updateCurrencyUI();
+update();

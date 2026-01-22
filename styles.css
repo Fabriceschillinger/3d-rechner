@@ -757,6 +757,10 @@ details.advanced-settings[open] .toggle::after {
   .price-grid,
   .cost-grid,
   .metrics-grid {
+  .material-header,
+  .material-body,
+  .price-grid,
+  .cost-grid {
     grid-template-columns: 1fr;
   }
 
