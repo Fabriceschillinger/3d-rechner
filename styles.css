@@ -23,6 +23,43 @@ body {
   min-height: 100vh;
 }
 
+body[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f5f6fb;
+  --panel: #ffffff;
+  --panel-alt: #f2f2f5;
+  --card: #f7f7fa;
+  --text: #17181c;
+  --muted: #6f7380;
+  --accent: #6c4bff;
+  --border: rgba(20, 20, 20, 0.08);
+  background: #f5f6fb;
+  color: var(--text);
+}
+
+body[data-theme="light"] .toggle-card {
+  background: #f3f4f8;
+}
+
+body[data-theme="light"] .toggle {
+  background: #e1e3ea;
+}
+
+body[data-theme="light"] .advanced-body {
+  background: #f6f7fb;
+  border-color: rgba(20, 20, 20, 0.05);
+}
+
+body[data-theme="light"] .metric-card {
+  background: #ffffff;
+  border-color: rgba(20, 20, 20, 0.05);
+}
+
+body[data-theme="light"] .metric-card.highlight {
+  background: #eef2ff;
+  border-color: #dfe4ff;
+}
+
 .page {
   max-width: 1180px;
   margin: 0 auto;
@@ -146,6 +183,10 @@ label {
   display: inline-flex;
   gap: 6px;
   align-items: center;
+}
+
+.label-spacer {
+  visibility: hidden;
 }
 
 .info {
@@ -284,6 +325,7 @@ select.field {
   justify-content: space-between;
   align-items: center;
   margin-top: 12px;
+  cursor: pointer;
 }
 
 .toggle-card h3 {
@@ -314,6 +356,77 @@ select.field {
   position: absolute;
   top: 3px;
   left: 4px;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+details.advanced-settings {
+  margin-top: 12px;
+}
+
+details.advanced-settings summary {
+  list-style: none;
+}
+
+details.advanced-settings summary::-webkit-details-marker {
+  display: none;
+}
+
+details.advanced-settings[open] .toggle {
+  background: #6c4bff;
+}
+
+details.advanced-settings[open] .toggle::after {
+  background: #ffffff;
+  transform: translateX(20px);
+}
+
+.advanced-body {
+  background: #1e1f23;
+  border-radius: 16px;
+  margin-top: 12px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.advanced-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.advanced-metrics h4 {
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.metric-card {
+  background: #16171a;
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: grid;
+  gap: 6px;
+}
+
+.metric-card span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.metric-card strong {
+  font-size: 14px;
+}
+
+.metric-card.highlight {
+  background: #2a3255;
+  border-color: rgba(110, 130, 255, 0.4);
 }
 
 .price-grid {
@@ -638,6 +751,12 @@ select.field {
 
   .form-row,
   .form-row.two,
+  .advanced-grid,
+  .material-header,
+  .material-body,
+  .price-grid,
+  .cost-grid,
+  .metrics-grid {
   .material-header,
   .material-body,
   .price-grid,

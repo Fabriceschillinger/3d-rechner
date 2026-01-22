@@ -20,6 +20,8 @@
       </div>
       <div class="top-actions">
         <button class="chip">Deutsch</button>
+        <button class="chip" data-currency-button>CHF</button>
+        <button class="icon-btn" data-theme-toggle>🌙</button>
         <button class="chip">CHF&nbsp;CHF</button>
         <button class="icon-btn">🌙</button>
         <button class="icon-btn">⚙️</button>
@@ -34,6 +36,7 @@
           <input id="part-name" class="field" type="text" placeholder="" />
           <label for="printer-profile">Druckerprofil <span class="info">?</span></label>
           <select id="printer-profile" class="field field-muted">
+            <option selected>P1S</option>
             <option>Allgemeiner Drucker</option>
             <option>Präzisionsdrucker</option>
             <option>Industrieanlage</option>
@@ -58,6 +61,7 @@
             </select>
             <div class="field inline">
               <input id="cost-per-kg" type="number" step="0.1" value="24" />
+              <span class="badge" data-currency-label>CHF</span>
               <span class="badge">CHF</span>
             </div>
             <div class="field inline">
@@ -69,6 +73,7 @@
 
         <div class="form-row two">
           <label for="print-hours">Druckzeit <span class="info">?</span></label>
+          <span class="label-spacer" aria-hidden="true"></span>
           <label for="labor-minutes">Arbeitszeit <span class="info">?</span></label>
           <div class="field inline">
             <input id="print-hours" type="number" step="0.5" value="8" />
@@ -84,11 +89,17 @@
           </div>
         </div>
 
+        <div class="form-row">
         <div class="form-row two">
           <label for="hardware-cost">Hardwarekosten <span class="info">?</span></label>
           <label for="packaging-cost">Verpackungskosten <span class="info">?</span></label>
           <div class="field inline">
             <input id="hardware-cost" type="number" step="0.1" value="0" />
+            <span class="badge" data-currency-label>CHF</span>
+          </div>
+          <div class="field inline">
+            <input id="packaging-cost" type="number" step="0.1" value="0" />
+            <span class="badge" data-currency-label>CHF</span>
             <span class="badge">CHF</span>
           </div>
           <div class="field inline">
@@ -113,6 +124,107 @@
           <div class="toggle"></div>
         </div>
 
+        <details class="advanced-settings">
+          <summary class="toggle-card">
+            <div>
+              <h3>Erweiterte Einstellungen</h3>
+              <p>Erweiterte Parameter wie Stromkosten und Abschreibung konfigurieren.</p>
+            </div>
+            <div class="toggle"></div>
+          </summary>
+          <div class="advanced-body">
+            <div class="advanced-grid">
+              <label for="labor-rate">Arbeitssatz <span class="info">?</span></label>
+              <label for="material-efficiency">Materialeffizienzfaktor <span class="info">?</span></label>
+              <div class="field inline">
+                <input id="labor-rate" type="number" step="0.1" value="20" />
+                <span class="badge" data-currency-label="per-hour">CHF/hr</span>
+              </div>
+              <div class="field inline">
+                <input id="material-efficiency" type="number" step="0.01" value="1.1" />
+                <span class="badge">x</span>
+              </div>
+
+              <label for="printer-cost">Druckerkosten <span class="info">?</span></label>
+              <label for="additional-costs">Zusätzliche Anfangskosten <span class="info">?</span></label>
+              <div class="field inline">
+                <input id="printer-cost" type="number" step="1" value="699" />
+                <span class="badge" data-currency-label>CHF</span>
+              </div>
+              <div class="field inline">
+                <input id="additional-costs" type="number" step="1" value="0" />
+                <span class="badge" data-currency-label>CHF</span>
+              </div>
+
+              <label for="yearly-maintenance">Jährliche Wartung <span class="info">?</span></label>
+              <label for="lifetime-years">Geschätzte Lebensdauer <span class="info">?</span></label>
+              <div class="field inline">
+                <input id="yearly-maintenance" type="number" step="1" value="70" />
+                <span class="badge" data-currency-label>CHF</span>
+              </div>
+              <div class="field inline">
+                <input id="lifetime-years" type="number" step="1" value="3" />
+                <span class="badge">Jahre</span>
+              </div>
+
+              <label for="utilization-rate">Betriebszeit-Prozentsatz <span class="info">?</span></label>
+              <label for="power-consumption">Stromverbrauch <span class="info">?</span></label>
+              <div class="field inline">
+                <input id="utilization-rate" type="number" step="1" value="50" />
+                <span class="badge">%</span>
+              </div>
+              <div class="field inline">
+                <input id="power-consumption" type="number" step="1" value="150" />
+                <span class="badge">W</span>
+              </div>
+
+              <label for="electricity-cost">Stromkosten <span class="info">?</span></label>
+              <label for="buffer-factor">Pufferfaktor <span class="info">?</span></label>
+              <div class="field inline">
+                <input id="electricity-cost" type="number" step="0.01" value="0.2" />
+                <span class="badge" data-currency-label="per-kwh">CHF/kWh</span>
+              </div>
+              <div class="field inline">
+                <input id="buffer-factor" type="number" step="0.01" value="1.3" />
+                <span class="badge">x</span>
+              </div>
+            </div>
+
+            <div class="advanced-metrics">
+              <h4>Berechnete Kennzahlen</h4>
+              <div class="metrics-grid">
+                <div class="metric-card">
+                  <span>Gesamtinvestition</span>
+                  <strong data-output="total-investment">0.00 CHF</strong>
+                </div>
+                <div class="metric-card">
+                  <span>Lebensdauerkosten</span>
+                  <strong data-output="lifetime-costs">0.00 CHF</strong>
+                </div>
+                <div class="metric-card">
+                  <span>Geschätzte Betriebszeit</span>
+                  <strong data-output="estimated-hours">0 hrs/year</strong>
+                </div>
+                <div class="metric-card">
+                  <span>Drucker-Abschreibung</span>
+                  <strong data-output="depreciation-per-hour">0.00 CHF/hr</strong>
+                </div>
+                <div class="metric-card">
+                  <span>Wartungskosten</span>
+                  <strong data-output="maintenance-per-hour">0.00 CHF/hr</strong>
+                </div>
+                <div class="metric-card">
+                  <span>Stromkosten</span>
+                  <strong data-output="power-per-hour">0.00 CHF/hr</strong>
+                </div>
+                <div class="metric-card highlight">
+                  <span>Gesamte Druckerkosten</span>
+                  <strong data-output="total-machine-per-hour">0.00 CHF/hr</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
         <div class="toggle-card">
           <div>
             <h3>Erweiterte Einstellungen</h3>
@@ -131,6 +243,8 @@
                 <h4>Wettbewerbsfähig</h4>
                 <p>25% Gewinnmarge</p>
               </div>
+              <div class="price" data-output="price-25">0.00 CHF</div>
+              <div class="sub" data-output="price-25-vat">0.00 CHF inkl. MwSt</div>
               <div class="price"><span data-output="price-25">41.86</span> <span>CHF</span></div>
               <div class="sub" data-output="price-25-vat">49.81 CHF inkl. MwSt</div>
             </div>
@@ -139,6 +253,8 @@
                 <h4>Standard</h4>
                 <p>40% Gewinnmarge</p>
               </div>
+              <div class="price" data-output="price-40">0.00 CHF</div>
+              <div class="sub" data-output="price-40-vat">0.00 CHF inkl. MwSt</div>
               <div class="price"><span data-output="price-40">52.32</span> <span>CHF</span></div>
               <div class="sub" data-output="price-40-vat">62.26 CHF inkl. MwSt</div>
             </div>
@@ -147,6 +263,8 @@
                 <h4>Premium</h4>
                 <p>60% Gewinnmarge</p>
               </div>
+              <div class="price" data-output="price-60">0.00 CHF</div>
+              <div class="sub" data-output="price-60-vat">0.00 CHF inkl. MwSt</div>
               <div class="price"><span data-output="price-60">78.48</span> <span>CHF</span></div>
               <div class="sub" data-output="price-60-vat">93.39 CHF inkl. MwSt</div>
             </div>
@@ -155,6 +273,8 @@
                 <h4>Luxus</h4>
                 <p>80% Gewinnmarge</p>
               </div>
+              <div class="price" data-output="price-80">0.00 CHF</div>
+              <div class="sub" data-output="price-80-vat">0.00 CHF inkl. MwSt</div>
               <div class="price"><span data-output="price-80">156.96</span> <span>CHF</span></div>
               <div class="sub" data-output="price-80-vat">186.78 CHF inkl. MwSt</div>
             </div>
@@ -166,6 +286,7 @@
                 <h4>Individuell</h4>
                 <p>Wählen Sie Ihre eigene Gewinnmarge</p>
               </div>
+              <div class="price" data-output="price-custom">0.00 CHF</div>
               <div class="price"><span data-output="price-custom">62.78</span> <span>CHF</span></div>
             </div>
             <div class="slider">
@@ -176,6 +297,11 @@
               </div>
               <div class="slider-labels">
                 <span data-output="margin-label">50% Gewinnmarge</span>
+                <span data-output="price-custom-vat">0.00 CHF inkl. MwSt</span>
+              </div>
+            </div>
+            <div class="custom-foot">
+              <span data-output="selected-price">Ausgewählt: 0.00 CHF inkl. MwSt</span>
                 <span data-output="price-custom-vat">74.71 CHF inkl. MwSt</span>
               </div>
             </div>
@@ -191,6 +317,19 @@
           <div class="cost-grid">
             <div class="cost-card">
               <span>Materialkosten</span>
+              <strong data-output="material-cost">0.00 CHF</strong>
+            </div>
+            <div class="cost-card">
+              <span>Arbeitskosten</span>
+              <strong data-output="labor-cost">0.00 CHF</strong>
+            </div>
+            <div class="cost-card">
+              <span>Maschinenkosten</span>
+              <strong data-output="machine-cost">0.00 CHF</strong>
+            </div>
+            <div class="cost-card alert">
+              <span>Gesamtkosten</span>
+              <strong data-output="total-cost">0.00 CHF</strong>
               <strong data-output="material-cost">10.30 CHF</strong>
             </div>
             <div class="cost-card">
@@ -212,6 +351,7 @@
             <div class="distribution-body">
               <div class="donut">
                 <div class="donut-inner">
+                  <div class="donut-value" data-output="donut-total">0.00 CHF</div>
                   <div class="donut-value" data-output="donut-total">31.39 CHF</div>
                   <div class="donut-label">Gesamt</div>
                 </div>
@@ -221,6 +361,7 @@
                   <span class="dot blue"></span>
                   <div>
                     <strong>Arbeit</strong>
+                    <span data-output="legend-labor">0.00 CHF</span>
                     <span data-output="legend-labor">20.00 CHF</span>
                   </div>
                   <em data-output="legend-labor-percent">63.7%</em>
@@ -229,6 +370,7 @@
                   <span class="dot green"></span>
                   <div>
                     <strong>Material</strong>
+                    <span data-output="legend-material">0.00 CHF</span>
                     <span data-output="legend-material">10.30 CHF</span>
                   </div>
                   <em data-output="legend-material-percent">32.8%</em>
@@ -237,6 +379,7 @@
                   <span class="dot yellow"></span>
                   <div>
                     <strong>Maschine</strong>
+                    <span data-output="legend-machine">0.00 CHF</span>
                     <span data-output="legend-machine">1.10 CHF</span>
                   </div>
                   <em data-output="legend-machine-percent">3.5%</em>
@@ -245,6 +388,7 @@
                   <span class="dot red"></span>
                   <div>
                     <strong>Strom</strong>
+                    <span data-output="legend-power">0.00 CHF</span>
                     <span data-output="legend-power">0.26 CHF</span>
                   </div>
                   <em data-output="legend-power-percent">0.8%</em>
@@ -257,6 +401,7 @@
                 <p>4 Kostenkomponenten</p>
               </div>
               <div class="foot-total">
+                <strong data-output="foot-total">0.00 CHF</strong>
                 <strong data-output="foot-total">31.39 CHF</strong>
                 <p data-output="foot-largest">Größte: Arbeit (63.7%)</p>
               </div>

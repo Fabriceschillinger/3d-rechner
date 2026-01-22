@@ -8,6 +8,16 @@ const elements = {
   packagingCost: document.querySelector('#packaging-cost'),
   vatRate: document.querySelector('#vat-rate'),
   marginSlider: document.querySelector('#margin-slider'),
+  laborRate: document.querySelector('#labor-rate'),
+  materialEfficiency: document.querySelector('#material-efficiency'),
+  printerCost: document.querySelector('#printer-cost'),
+  additionalCosts: document.querySelector('#additional-costs'),
+  yearlyMaintenance: document.querySelector('#yearly-maintenance'),
+  lifetimeYears: document.querySelector('#lifetime-years'),
+  utilizationRate: document.querySelector('#utilization-rate'),
+  powerConsumption: document.querySelector('#power-consumption'),
+  electricityCost: document.querySelector('#electricity-cost'),
+  bufferFactor: document.querySelector('#buffer-factor'),
   totalWeight: document.querySelector('[data-output="total-weight"]'),
   materialCost: document.querySelector('[data-output="material-cost"]'),
   laborCost: document.querySelector('[data-output="labor-cost"]'),
@@ -40,6 +50,62 @@ const elements = {
   sliderFill: document.querySelector('.slider .fill'),
   sliderThumb: document.querySelector('.slider .thumb'),
   donut: document.querySelector('.donut'),
+  totalInvestment: document.querySelector('[data-output="total-investment"]'),
+  lifetimeCosts: document.querySelector('[data-output="lifetime-costs"]'),
+  estimatedHours: document.querySelector('[data-output="estimated-hours"]'),
+  depreciationPerHour: document.querySelector('[data-output="depreciation-per-hour"]'),
+  maintenancePerHour: document.querySelector('[data-output="maintenance-per-hour"]'),
+  powerPerHour: document.querySelector('[data-output="power-per-hour"]'),
+  totalMachinePerHour: document.querySelector('[data-output="total-machine-per-hour"]'),
+  currencyButton: document.querySelector('[data-currency-button]'),
+  currencyLabels: document.querySelectorAll('[data-currency-label]'),
+  themeToggle: document.querySelector('[data-theme-toggle]'),
+  advancedSettings: document.querySelector('.advanced-settings'),
+};
+
+const currencies = {
+  CHF: {
+    locale: 'de-CH',
+    code: 'CHF',
+    label: 'CHF',
+    perHour: 'CHF/hr',
+    perKwh: 'CHF/kWh',
+  },
+  EUR: {
+    locale: 'de-DE',
+    code: 'EUR',
+    label: 'EUR',
+    perHour: 'EUR/hr',
+    perKwh: 'EUR/kWh',
+  },
+  USD: {
+    locale: 'en-US',
+    code: 'USD',
+    label: 'USD',
+    perHour: 'USD/hr',
+    perKwh: 'USD/kWh',
+  },
+};
+
+const state = {
+  currency: 'CHF',
+  theme: 'dark',
+};
+
+const getNumberFormatter = () => {
+  const { locale } = currencies[state.currency];
+  return new Intl.NumberFormat(locale, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+};
+
+const formatCurrency = (value) => {
+  const formatter = getNumberFormatter();
+  return `${formatter.format(value)} ${currencies[state.currency].code}`;
+};
+
+const formatNumber = (value) => getNumberFormatter().format(value);
 };
 
 const rates = {
@@ -64,6 +130,8 @@ const updatePrices = (totalCost, vatRate, marginPercent, outputs) => {
   const margin = marginPercent / 100;
   const net = totalCost / (1 - margin);
   const gross = net * (1 + vatRate / 100);
+  outputs.net.textContent = formatCurrency(net);
+  outputs.gross.textContent = `${formatCurrency(gross)} inkl. MwSt`;
   outputs.net.textContent = formatter.format(net);
   outputs.gross.textContent = `${formatter.format(gross)} CHF inkl. MwSt`;
 };
@@ -78,6 +146,34 @@ const update = () => {
   const packagingCost = readNumber(elements.packagingCost);
   const vatRate = readNumber(elements.vatRate);
   const marginPercent = readNumber(elements.marginSlider);
+  const laborRate = readNumber(elements.laborRate);
+  const materialEfficiency = readNumber(elements.materialEfficiency) || 1;
+  const printerCost = readNumber(elements.printerCost);
+  const additionalCosts = readNumber(elements.additionalCosts);
+  const yearlyMaintenance = readNumber(elements.yearlyMaintenance);
+  const lifetimeYears = readNumber(elements.lifetimeYears) || 1;
+  const utilizationRate = readNumber(elements.utilizationRate);
+  const powerConsumption = readNumber(elements.powerConsumption);
+  const electricityCost = readNumber(elements.electricityCost);
+  const bufferFactor = readNumber(elements.bufferFactor) || 1;
+
+  const totalWeight = weightG;
+  const materialCost = (weightG / 1000) * costPerKg * materialEfficiency;
+  const printTimeHours = printHours + printMinutes / 60;
+  const laborHours = laborMinutes / 60;
+  const laborCost = laborHours * laborRate;
+  const totalInvestment = printerCost + additionalCosts;
+  const estimatedHoursPerYear = 8760 * (utilizationRate / 100);
+  const totalLifetimeHours = Math.max(estimatedHoursPerYear * lifetimeYears, 1);
+  const depreciationPerHour = totalInvestment / totalLifetimeHours;
+  const maintenancePerHour = yearlyMaintenance / Math.max(estimatedHoursPerYear, 1);
+  const powerPerHour = (powerConsumption / 1000) * electricityCost;
+  const machineRateBase = (depreciationPerHour + maintenancePerHour) * bufferFactor;
+  const machineCost = printTimeHours * machineRateBase;
+  const powerCost = printTimeHours * powerPerHour;
+  const totalCost = materialCost + laborCost + machineCost + powerCost + hardwareCost + packagingCost;
+
+  elements.totalWeight.textContent = formatNumber(totalWeight);
 
   const totalWeight = weightG;
   const materialCost = (weightG / 1000) * costPerKg;
@@ -141,6 +237,9 @@ const update = () => {
   const margin = marginPercent / 100;
   const net = totalCost / (1 - margin);
   const gross = net * (1 + vatRate / 100);
+  elements.priceCustom.textContent = formatCurrency(net);
+  elements.priceCustomVat.textContent = `${formatCurrency(gross)} inkl. MwSt`;
+  elements.selectedPrice.textContent = `Ausgewählt: ${formatCurrency(gross)} inkl. MwSt`;
   elements.priceCustom.textContent = formatter.format(net);
   elements.priceCustomVat.textContent = `${formatter.format(gross)} CHF inkl. MwSt`;
   elements.selectedPrice.textContent = `Ausgewählt: ${formatter.format(gross)} CHF inkl. MwSt`;
@@ -150,6 +249,15 @@ const update = () => {
   const sliderPercentValue = sliderPercent * 100;
   elements.sliderFill.style.width = `${sliderPercentValue}%`;
   elements.sliderThumb.style.left = `${sliderPercentValue}%`;
+
+  const lifetimeCosts = totalInvestment + yearlyMaintenance * lifetimeYears;
+  elements.totalInvestment.textContent = formatCurrency(totalInvestment);
+  elements.lifetimeCosts.textContent = formatCurrency(lifetimeCosts);
+  elements.estimatedHours.textContent = `${Math.round(estimatedHoursPerYear)} hrs/year`;
+  elements.depreciationPerHour.textContent = `${formatCurrency(depreciationPerHour)}/hr`;
+  elements.maintenancePerHour.textContent = `${formatCurrency(maintenancePerHour)}/hr`;
+  elements.powerPerHour.textContent = `${formatCurrency(powerPerHour)}/hr`;
+  elements.totalMachinePerHour.textContent = `${formatCurrency(machineRateBase + powerPerHour)}/hr`;
 };
 
 [
@@ -162,8 +270,59 @@ const update = () => {
   elements.packagingCost,
   elements.vatRate,
   elements.marginSlider,
+  elements.laborRate,
+  elements.materialEfficiency,
+  elements.printerCost,
+  elements.additionalCosts,
+  elements.yearlyMaintenance,
+  elements.lifetimeYears,
+  elements.utilizationRate,
+  elements.powerConsumption,
+  elements.electricityCost,
+  elements.bufferFactor,
 ].forEach((input) => {
   input.addEventListener('input', update);
 });
 
+const updateCurrencyUI = () => {
+  const currency = currencies[state.currency];
+  elements.currencyButton.textContent = currency.label;
+  elements.currencyLabels.forEach((label) => {
+    const type = label.dataset.currencyLabel;
+    if (type === 'per-hour') {
+      label.textContent = currency.perHour;
+    } else if (type === 'per-kwh') {
+      label.textContent = currency.perKwh;
+    } else {
+      label.textContent = currency.label;
+    }
+  });
+  update();
+};
+
+const toggleTheme = () => {
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  document.body.dataset.theme = state.theme;
+  elements.themeToggle.textContent = state.theme === 'dark' ? '🌙' : '☀️';
+};
+
+elements.currencyButton.addEventListener('click', () => {
+  const keys = Object.keys(currencies);
+  const currentIndex = keys.indexOf(state.currency);
+  state.currency = keys[(currentIndex + 1) % keys.length];
+  updateCurrencyUI();
+});
+
+elements.themeToggle.addEventListener('click', () => {
+  toggleTheme();
+});
+
+elements.advancedSettings.querySelector('summary').addEventListener('click', (event) => {
+  event.preventDefault();
+  elements.advancedSettings.open = !elements.advancedSettings.open;
+});
+
+document.body.dataset.theme = state.theme;
+elements.themeToggle.textContent = state.theme === 'dark' ? '🌙' : '☀️';
+updateCurrencyUI();
 update();
